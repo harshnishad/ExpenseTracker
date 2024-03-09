@@ -6,19 +6,25 @@ var {ruruHTML} = require('ruru/server')
 // Construct a schema, using GraphQL schema language
 var schema = buildSchema(`
   type Query {
-    hello: String
+    hello(name: String): String
     age:Int
+    weight:Float!
+    isOver18:Boolean
+    hobbies:[String]!
   }
 `)
 
 // The root provides a resolver function for each API endpoint
 var root = {
-  hello: () => {
-    return "Hello world!"
+  hello: (args) => {
+    return "Hello"+args.name;
   },
   age: () => {
     return 20
   },
+  weight:108.55,
+  isOver18:true,
+  hobbies:()=>["Reading","Writing"]
 }
 
 
@@ -30,7 +36,7 @@ app.all(
     })
   )
 //help to intract with server
-app.get("/", (_req, res) => {
+app.get("/", (req, res) => {
     res.type("html")
     res.end(ruruHTML({ endpoint: "/graphql" }))
   })
